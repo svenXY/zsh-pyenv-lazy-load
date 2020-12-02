@@ -7,9 +7,15 @@ fi
 _init_pyenv() {
   unset -f pyenv _pyenv_chpwd_hook _init_pyenv
   chpwd_functions[$chpwd_functions[(i)_pyenv_chpwd_hook]]=()
-
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
+  if [ -f $HOME/.pyenv-init.zsh  ]; then
+    source $HOME/.pyenv-init.zsh
+  else
+    # regenerate pyenv init source files
+    # should better be done in some other init file but not in .zshrc
+    # initialization
+    pyenv init - > $HOME/.pyenv_init.zsh
+    pyenv virtualenv-init - >> $HOME/.pyenv_init.zsh
+  fi
 }
 
 pyenv() {
